@@ -67,6 +67,21 @@ server.get("/api/zoos/:id", async (req, res) => {
   }
 });
 
+// ********** DELETE **********
+server.delete("/api/zoos/:id", async (req, res) => {
+  try {
+    const [id] = req.params.id;
+    const deleted = await db("zoos")
+      .where({ id })
+      .del();
+    res.status(200).json({ message: `${deleted} zoo record was deleted.` });
+  } catch (err) {
+    res.status(500).json({
+      message: "This server wants that one to stay forever, it will not delete"
+    });
+  }
+});
+
 const port = 3300;
 server.listen(port, function() {
   console.log(`\n=== Web API Listening on http://localhost:${port} ===\n`);
