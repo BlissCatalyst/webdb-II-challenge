@@ -59,7 +59,11 @@ server.get("/api/zoos/:id", async (req, res) => {
     const zoo = await db("zoos")
       .where({ id })
       .first();
-    res.status(200).json({ zoo, message: "Here is the zoo you selected!" });
+    if (zoo) {
+      res.status(200).json({ zoo, message: "Here is the zoo you selected!" });
+    } else {
+      res.status(400).json({ message: "The zoo at this id doesn't exist." });
+    }
   } catch (err) {
     res.status(500).json({
       message: "Our server will not deliver that up for you right now..."
@@ -74,7 +78,13 @@ server.delete("/api/zoos/:id", async (req, res) => {
     const deleted = await db("zoos")
       .where({ id })
       .del();
-    res.status(200).json({ message: `${deleted} zoo record was deleted.` });
+    if (deleted) {
+      res.status(200).json({ message: `${deleted} zoo record was deleted.` });
+    } else {
+      res
+        .status(400)
+        .json({ message: "The zoo you are trying to delete doesn't exist." });
+    }
   } catch (err) {
     res.status(500).json({
       message: "This server wants that one to stay forever, it will not delete"
