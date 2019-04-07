@@ -92,6 +92,33 @@ server.delete("/api/zoos/:id", async (req, res) => {
   }
 });
 
+// ********** PUT **********
+server.put("/api/zoos/:id", async (req, res) => {
+  try {
+    const update = req.body;
+    const [id] = req.params.id;
+    if (update && update.name) {
+      const changed = await db("zoos")
+        .where({ id })
+        .update(update);
+      if (changed) {
+        const newZoo = await db("zoos")
+          .where({ id })
+          .first();
+        res.status(200).json({ newZoo, message: "Here is the updated zoo!" });
+      } else {
+        res.status(400).json({ message: "That zoo record doesn't exist." });
+      }
+    } else {
+      res
+        .status(400)
+        .json({ message: "You must include a name for updating." });
+    }
+  } catch (err) {
+    res.status(500).json({ message: "The server will not update right now." });
+  }
+});
+
 const port = 3300;
 server.listen(port, function() {
   console.log(`\n=== Web API Listening on http://localhost:${port} ===\n`);
