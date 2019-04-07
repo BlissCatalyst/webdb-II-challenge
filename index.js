@@ -40,6 +40,18 @@ server.post("/api/zoos", async (req, res) => {
   }
 });
 
+// ********** GET **********
+server.get("/api/zoos", async (req, res) => {
+  try {
+    const zoos = await db("zoos");
+    res.status(200).json(zoos);
+  } catch (err) {
+    res.status(500).json({
+      message: "server cannot get any of them right now, soo...sorry"
+    });
+  }
+});
+
 const port = 3300;
 server.listen(port, function() {
   console.log(`\n=== Web API Listening on http://localhost:${port} ===\n`);
