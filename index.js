@@ -40,7 +40,7 @@ server.post("/api/zoos", async (req, res) => {
   }
 });
 
-// ********** GET **********
+// ********** GET ALL ZOOS **********
 server.get("/api/zoos", async (req, res) => {
   try {
     const zoos = await db("zoos");
@@ -48,6 +48,21 @@ server.get("/api/zoos", async (req, res) => {
   } catch (err) {
     res.status(500).json({
       message: "server cannot get any of them right now, soo...sorry"
+    });
+  }
+});
+
+// ********** GET ZOO BY ID **********
+server.get("/api/zoos/:id", async (req, res) => {
+  try {
+    const [id] = req.params.id;
+    const zoo = await db("zoos")
+      .where({ id })
+      .first();
+    res.status(200).json({ zoo, message: "Here is the zoo you selected!" });
+  } catch (err) {
+    res.status(500).json({
+      message: "Our server will not deliver that up for you right now..."
     });
   }
 });
